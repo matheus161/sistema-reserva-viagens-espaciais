@@ -22,8 +22,8 @@ describe('UserController', () => {
 
             req.body = {
                 name: 'Sófocles Teamildo',
-                email: 'softeam@softeam.com.br',
-                password: 'cabecadegelo'
+                email: 'email@email.com.br',
+                password: 'cabecadegelo',
             };
 
             req.emailInUse = false;
@@ -35,7 +35,9 @@ describe('UserController', () => {
             const { status, json } = await UserController.create(req, res);
 
             expect(status).to.equal(400);
-            expect(json).to.deep.equal({ message: 'O email softeam@softeam.com.br já está em uso.' });
+            expect(json).to.deep.equal({
+                message: 'O email email@email.com.br já está em uso.',
+            });
         });
 
         it('should return 201 and create user', async () => {
@@ -49,7 +51,7 @@ describe('UserController', () => {
         });
 
         it('should not return the user password', async () => {
-            createStub.callsFake(arg => arg);
+            createStub.callsFake((arg) => arg);
 
             const { json } = await UserController.create(req, res);
 
@@ -77,7 +79,7 @@ describe('UserController', () => {
             req.body = {
                 name: 'Sófocles Teamildo Espírito Januário Cruz',
                 password: 'asenhasecreta',
-                email: 'softeam@softeam.com.br'
+                email: 'email@email.com.br',
             };
         });
 
@@ -87,7 +89,9 @@ describe('UserController', () => {
             const { status, json } = await UserController.update(req, res);
 
             expect(status).to.equal(404);
-            expect(json).to.deep.equal({ message: `Não foi encontrado usuário com o id ${req.userId}` });
+            expect(json).to.deep.equal({
+                message: `Não foi encontrado usuário com o id ${req.userId}`,
+            });
         });
 
         it('should return 200 and update user data', async () => {
@@ -106,7 +110,7 @@ describe('UserController', () => {
             findStub.returns({
                 select: () => {
                     throw new Error('Erro ao buscar usuário');
-                }
+                },
             });
 
             const { status, json } = await UserController.update(req, res);
@@ -124,15 +128,18 @@ describe('UserController', () => {
         });
 
         it('should return 200 and a list of users', async () => {
-            const users = [{
-                name: 'Jonas Lima',
-                email: 'jonaslima@softeam.com.br',
-                password: 'designehminhapaixao'
-            }, {
-                name: 'Yves Bastos',
-                email: 'yvesbastos@softeam.com.br',
-                password: 'acabecadopovo'
-            }];
+            const users = [
+                {
+                    name: 'Fulano',
+                    email: 'fulano@email.com.br',
+                    password: 'fulano',
+                },
+                {
+                    name: 'Ciclano',
+                    email: 'ciclano@email.com.br',
+                    password: 'ciclano',
+                },
+            ];
 
             findStub.resolves(users);
 
@@ -166,14 +173,16 @@ describe('UserController', () => {
             const { status, json } = await UserController.getById(req, res);
 
             expect(status).to.equal(404);
-            expect(json).to.deep.equal({ message: `Não há usuário com o id ${req.params.id}.` });
+            expect(json).to.deep.equal({
+                message: `Não há usuário com o id ${req.params.id}.`,
+            });
         });
 
         it('should return 200 and user', async () => {
             const user = {
                 name: 'Zé da Onça',
-                email: 'zedaonca@softeam.com.br',
-                password: 'graaaaawrlllllnhaaauw'
+                email: 'zedaonca@email.com.br',
+                password: 'graaaaawrlllllnhaaauw',
             };
 
             findStub.resolves(user);
@@ -214,8 +223,8 @@ describe('UserController', () => {
         it('should return 200 and delete the user with the given id', async () => {
             const user = {
                 name: 'Mor Tod Asilva',
-                email: 'mortodasilva@softeam.com.br',
-                password: 'senhaencriptada'
+                email: 'mortodasilva@email.com.br',
+                password: 'senhaencriptada',
             };
 
             removeStub.resolves(user);

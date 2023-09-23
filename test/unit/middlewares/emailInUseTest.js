@@ -16,7 +16,7 @@ describe('emailInUse', () => {
         res = TestUtils.mockRes();
         next = TestUtils.mockNext(sandbox);
 
-        req.body = { email: 'silviosantos@softeam.com.br' };
+        req.body = { email: 'silviosantos@email.com.br' };
 
         findStub = sandbox.stub(User, 'findOne');
     });
@@ -39,8 +39,8 @@ describe('emailInUse', () => {
     it('should mark emailInUse as true if user is found', async () => {
         const user = new User({
             name: 'Mize Ravi',
-            email: 'mizeraviacerto@softeam.com.br',
-            password: 'melancia'
+            email: 'mizeraviacerto@email.com.br',
+            password: 'melancia',
         });
 
         findStub.resolves(user);
