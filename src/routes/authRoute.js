@@ -1,12 +1,10 @@
-import { Router } from 'express';
-import emailInUse from '../middlewares/emailInUse';
-import limitRequests from '../middlewares/limitRequests';
-import validate from '../middlewares/validate';
-import SessionController from '../controllers/SessionController';
-import { authRules } from '../models/User';
+import { Router } from "express";
+import emailInUse from "../middlewares/emailInUse";
+import limitRequests from "../middlewares/limitRequests";
+import SessionController from "../controllers/SessionController";
 
 const router = Router();
 
-router.post('/', limitRequests.heavily, validate(authRules), emailInUse, SessionController.auth);
+router.post("/", limitRequests.heavily, emailInUse, SessionController.auth);
 
-export default { router, name: '/auth' };
+export default { router, name: "/auth" };

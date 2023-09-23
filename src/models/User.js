@@ -1,6 +1,9 @@
 import { Schema, model } from 'mongoose';
 import Joi from 'joi';
 import PasswordUtils from '../utils/PasswordUtils';
+import nameRules from '../validations/nameValidation';
+import emailRules from '../validations/emailValidation';
+import passwordRules from '../validations/passValidation';
 
 const UserSchema = new Schema(
     {
@@ -23,12 +26,16 @@ const UserSchema = new Schema(
             maxlength: 40,
             select: false,
         },
+
+        isManager: {
+            type: Boolean,
+            default: false,
+        },
     },
 
-    { timeStamps: true, discriminatorKey: 'role' },
+    { timeStamps: true, discriminatorKey: 'role' }
 );
 
-// Deve-se usar function() e não arrow function por causa do this.
 // eslint-disable-next-line func-names
 UserSchema.pre('save', async function (next) {
     this.password = await PasswordUtils.encrypt(this.password);
@@ -37,11 +44,8 @@ UserSchema.pre('save', async function (next) {
 
 const User = model('User', UserSchema);
 
-const emailRules = Joi.string().email().required();
-const passwordRules = Joi.string().min(8).max(40).required();
-
 const userRules = Joi.object({
-    name: Joi.string().pattern(new RegExp(/^[A-Za-zÁÉÍÓÚáéíóúãõÃÕâêôÂÊÔ ]+$/)).required(),
+    name: nameRules,
     email: emailRules,
     password: passwordRules,
 });
