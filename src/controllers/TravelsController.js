@@ -57,6 +57,16 @@ async function getAll(req, res) {
     }
 }
 
+async function getById(req, res) {
+    try {
+        const travel = await Travels.findById(req.params.id);
+
+        return res.status(200).json(travel);
+    } catch ({ message }) {
+        return res.status(500).json({ message });
+    }
+}
+
 async function update(req, res) {
     try {
         const { body } = req;
@@ -88,7 +98,7 @@ async function remove(req, res) {
             isAvailable: false,
         });
 
-        return res.status(200).json({ message: 'Viagem deletada com sucesso' });
+        return res.status(204).json();
     } catch ({ message }) {
         return res.status(500).json({ message });
     }
@@ -98,6 +108,7 @@ export default {
     create,
     getAllAvailable,
     getAll,
+    getById,
     update,
     remove,
 };

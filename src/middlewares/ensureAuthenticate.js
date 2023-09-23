@@ -6,7 +6,7 @@ async function ensureAuthenticate(req, res, next) {
     const { authorization } = req.headers;
 
     if (!authorization) {
-        return res.status(401).json({
+        return res.status(404).json({
             status: 'error',
             message: 'Sem Token',
         });
