@@ -1,18 +1,18 @@
-import { User } from "../models/User";
+import { User } from '../models/User';
 
 async function ensureManager(req, res, next) {
-  const { user_id } = req;
+    const { userId } = req;
 
-  const user = await User.findById(user_id);
+    const user = await User.findById(userId);
 
-  if (!user.isManager) {
-    return res.status(401).json({
-      status: "error",
-      message: "User isn't admin.",
-    });
-  }
+    if (!user.isManager) {
+        return res.status(401).json({
+            status: 'error',
+            message: "User isn't admin.",
+        });
+    }
 
-  return next();
+    return next();
 }
 
-export { ensureManager };
+export default ensureManager;
