@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
+import { expect } from 'chai';
 import { User } from '../../../src/models/User';
 import PasswordUtils from '../../../src/utils/PasswordUtils';
 import SessionController from '../../../src/controllers/SessionController';
-import { expect } from 'chai';
 
 describe('SessionController', () => {
     describe('auth', () => {
@@ -12,9 +12,9 @@ describe('SessionController', () => {
         let findStub;
 
         const mockUser = {
-            email: 'juliao@softeam.com.br',
+            email: 'juliao@email.com.br',
             name: 'Julião da Motoca',
-            password: '2x45V6yxhsKslsa123çCad'
+            password: '2x45V6yxhsKslsa123çCad',
         };
 
         beforeEach(() => {
@@ -24,8 +24,8 @@ describe('SessionController', () => {
             res = TestUtils.mockRes();
 
             req.body = {
-                email: 'meteoro@softeam.com.br',
-                password: 'altoimpacto'
+                email: 'meteoro@email.com.br',
+                password: 'altoimpacto',
             };
 
             findStub = sandbox.stub(User, 'findOne');
@@ -45,7 +45,9 @@ describe('SessionController', () => {
 
             await SessionController.auth(req, res);
 
-            expect(PasswordUtils.match.calledWith(req.body.password, mockUser.password));
+            expect(
+                PasswordUtils.match.calledWith(req.body.password, mockUser.password)
+            );
         });
 
         it('should return 400 if user is not found', async () => {
@@ -79,7 +81,10 @@ describe('SessionController', () => {
             const { status, json } = await SessionController.auth(req, res);
 
             expect(status).to.equal(200);
-            expect(json).to.deep.equal({ user: userWithoutPassword, token: 'tokenemdoido' });
+            expect(json).to.deep.equal({
+                user: userWithoutPassword,
+                token: 'tokenemdoido',
+            });
         });
 
         afterEach(() => {

@@ -17,8 +17,8 @@ describe('validate', () => {
 
         req.body = {
             name: 'Ranger Vermelho',
-            email: 'redranger@softeam.com.br',
-            password: 'omoraldopaulorenger'
+            email: 'redranger@email.com.br',
+            password: 'omoraldopaulorenger',
         };
 
         schema = { validateAsync: sandbox.stub() };
