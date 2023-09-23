@@ -1,58 +1,62 @@
-import Log from '../../../src/models/Log';
-import LogController from '../../../src/controllers/LogController';
-import TestUtils from '../TestUtils';
+import Log from "../../../src/models/Log";
+import LogController from "../../../src/controllers/LogController";
+import TestUtils from "../TestUtils";
 
-describe('LogController', () => {
-    let sandbox;
-    let createStub;
+describe("LogController", () => {
+  let sandbox;
+  let createStub;
+
+  beforeEach(() => {
+    sandbox = createSandbox();
+
+    createStub = sandbox.stub(Log, "create");
+  });
+
+  describe("create()", () => {
+    // FIXME: A propriedade .create não existe em Log, impedindo de fazer o stub.
+    it.skip("should create a Log with the given content", async () => {
+      await LogController.create("O servidor papocou");
+
+      expect(createStub.calledWith({ content: "O servidor papocou" })).to.be
+        .true;
+    });
+  });
+
+  describe("get()", () => {
+    let req;
+    let res;
 
     beforeEach(() => {
-        sandbox = createSandbox();
+      req = TestUtils.mockReq();
+      res = TestUtils.mockRes();
 
-        createStub = sandbox.stub(Log, 'create');
+      Log.find = sandbox.stub();
     });
 
-    describe('create()', () => {
-        // FIXME: A propriedade .create não existe em Log, impedindo de fazer o stub.
-        it.skip('should create a Log with the given content', async () => {
-            await LogController.create('O servidor papocou');
+    it("should return 200 and find all logs", async () => {
+      const logs = [
+        { content: "O servidor papocou" },
+        { content: "Eh resenha soh kkk" },
+      ];
 
-            expect(createStub.calledWith({ content: 'O servidor papocou' })).to.be.true;
-        });
+      Log.find.resolves(logs);
+
+      const { status, json } = await LogController.get(req, res);
+
+      expect(Log.find.getCall(0).args[0]).to.eql({});
+      expect(status).to.equal(200);
+      expect(json).to.deep.equal(logs);
     });
 
-    describe('get()', () => {
-        let req;
-        let res;
+    it("should return 500 if an error is thrown", async () => {
+      Log.find.rejects({ message: "Rapaz tá tudo pegando fogo" });
 
-        beforeEach(() => {
-            req = TestUtils.mockReq();
-            res = TestUtils.mockRes();
+      const { status, json } = await LogController.get(req, res);
 
-            Log.find = sandbox.stub();
-        });
-
-        it('should return 200 and find all logs', async () => {
-            const logs = [{ content: 'O servidor papocou' }, { content: 'Eh resenha soh kkk' }];
-
-            Log.find.resolves(logs);
-
-            const { status, json } = await LogController.get(req, res);
-
-            expect(Log.find.getCall(0).args[0]).to.eql({});
-            expect(status).to.equal(200);
-            expect(json).to.deep.equal(logs);
-        });
-
-        it('should return 500 if an error is thrown', async () => {
-            Log.find.rejects({ message: 'Rapaz tá tudo pegando fogo' });
-
-            const { status, json } = await LogController.get(req, res);
-
-            expect(status).to.equal(500);
-            expect(json).to.deep.equal({ message: 'Rapaz tá tudo pegando fogo' });
-        });
+      expect(status).to.equal(500);
+      expect(json).to.deep.equal({ message: "Rapaz tá tudo pegando fogo" });
     });
+  });
 
-    afterEach(() => sandbox.restore());
+  afterEach(() => sandbox.restore());
 });

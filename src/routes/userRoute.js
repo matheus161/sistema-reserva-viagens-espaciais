@@ -1,20 +1,18 @@
 import { Router } from "express";
 import UserController from "../controllers/UserController";
 import limitRequests from "../middlewares/limitRequests";
-import verifyToken from "../middlewares/verifyToken";
 import verifyId from "../middlewares/verifyId";
-import validateUser from "../middlewares/validateUser";
+import { ensureManager } from "../middlewares/ensureManager";
+import ensureAuthenticate from "../middlewares/ensureAuthenticate";
 
 const router = Router();
 
 router.use(limitRequests.slightly);
 
-router.get("/", UserController.getAll);
-router.get("/:id", verifyId, UserController.getById);
+router.get("/", ensureAuthenticate, ensureManager, UserController.getAll);
+router.get("/:id", ensureAuthenticate, verifyId, UserController.getById);
 
-router.use(verifyToken);
-
-router.put("/", UserController.update);
-router.delete("/", validateUser(), UserController.remove);
+router.put("/", ensureAuthenticate, UserController.update);
+router.delete("/", ensureAuthenticate, UserController.remove);
 
 export default { router, name: "/user" };
