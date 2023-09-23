@@ -1,0 +1,814 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Sistema de Reserva de Viagens Espaciais",
+    "version": "0.5.0",
+    "description": "Documentaçao refente ao desafio de Desenvolvimento Backend Node.js: Sistema de Reserva de Viagens Espaciais."
+  },
+  "host": "localhost:8080",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Lista com todas as rotas referentes ao modulo de autenticação."
+    },
+    {
+      "name": "Register",
+      "description": "Lista com todas as rotas referentes ao modulo de registro do usuário."
+    },
+    {
+      "name": "User",
+      "description": "Lista com todas as rotas referentes ao modulo de usuário."
+    },
+    {
+      "name": "Reservation",
+      "description": "Lista com todas as rotas referentes ao modulo de reservas."
+    },
+    {
+      "name": "Travels",
+      "description": "Lista com todas as rotas referentes ao modulo de viagens."
+    }
+  ],
+  "paths": {
+    "/api/v1/auth": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Autentica o usuário e retorna um token JWT.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Dados do usuario",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Autentica o profissional e gera um token JWT."
+          },
+          "400": {
+            "description": "Sem token"
+          },
+          "401": {
+            "description": "Senha invalida"
+          },
+          "403": {
+            "description": "Usuario desativado"
+          },
+          "404": {
+            "description": "Usuario nao encontrado"
+          },
+          "409": {
+            "description": "Token invalido."
+          }
+        }
+      }
+    },
+    "/api/v1/register": {
+      "post": {
+        "tags": [
+          "Register"
+        ],
+        "summary": "Cria um novo usuário no banco de dados",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "dados do usuário",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Usuário cadastrado com sucesso."
+          },
+          "400": {
+            "description": "Requisicao de corpo invalida."
+          },
+          "404": {
+            "description": "Servico nao encontrado"
+          },
+          "409": {
+            "description": "Usuário ja cadastrado no banco de dados."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/user/": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Retorna uma lista com todos os usuários cadastrados no Banco de dados.",
+        "parameters": [
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista todos os usuários no banco.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "Token invalido. "
+          },
+          "404": {
+            "description": "Sem token. "
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/user/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Retorna um usuário utilizando o seu id.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna o usuário com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Requisicao de corpo invalida"
+          },
+          "404": {
+            "description": "Usuário nao encontrado."
+          },
+          "500": {
+            "description": "Erro interno no servidor."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Deleta um usuário do banco de dados utilizando o ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Profissional deletado com sucesso."
+          },
+          "400": {
+            "description": "ID do profissional invalido"
+          },
+          "404": {
+            "description": "Profissional nao cadastrado."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Atualiza um usuário já cadastrado.",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "id"
+          },
+          {
+            "in": "body",
+            "required": true,
+            "name": "dados do usuário a serem atualizados",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "ID do profissional invalido"
+          },
+          "401": {
+            "description": "Token invalido."
+          },
+          "404": {
+            "description": "Usuário nao encontrado/Sem Token."
+          },
+          "409": {
+            "description": "Usuário ja cadastrado."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/travels/": {
+      "post": {
+        "tags": [
+          "Travels"
+        ],
+        "summary": "Cria uma nova viagem no banco de dados",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "dados do usuário manager",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Viagem cadastrada com sucesso."
+          },
+          "400": {
+            "description": "Requisicao de corpo invalida."
+          },
+          "401": {
+            "description": "Token inválido. "
+          },
+          "404": {
+            "description": "Sem token. "
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Travels"
+        ],
+        "summary": "Retorna uma lista com todas as viagens cadastradas no Banco de dados.",
+        "parameters": [
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao do usuário manager",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista todos as viagens do banco.",
+            "schema": {
+              "$ref": "#/definitions/Travels"
+            }
+          },
+          "401": {
+            "description": "Token inválido. "
+          },
+          "404": {
+            "description": "Sem token. "
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/travels/available": {
+      "get": {
+        "tags": [
+          "Travels"
+        ],
+        "summary": "Retorna uma lista com todas as viagens cadastradas e com a tag isAvailable = true no Banco de dados.",
+        "parameters": [
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista todos as viagens do banco.",
+            "schema": {
+              "$ref": "#/definitions/Travels"
+            }
+          },
+          "401": {
+            "description": "Token inválido. "
+          },
+          "404": {
+            "description": "Sem token. "
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/travels/{id}": {
+      "get": {
+        "tags": [
+          "Travels"
+        ],
+        "summary": "Retorna uma viagem através de um id válido.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna uma viagem com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/Travels"
+            }
+          },
+          "400": {
+            "description": "Id inválido."
+          },
+          "401": {
+            "description": "Token inválido. "
+          },
+          "404": {
+            "description": "Sem token. "
+          },
+          "500": {
+            "description": "Erro interno no servidor."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Travels"
+        ],
+        "summary": "Exclusão lógica de uma viagem através de seu ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao do usuário manager",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Viagem deletada com sucesso."
+          },
+          "400": {
+            "description": "Id inválido."
+          },
+          "401": {
+            "description": "Token inválido. "
+          },
+          "404": {
+            "description": "Viagem não encontrada/Sem token."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Travels"
+        ],
+        "summary": "Atualiza uma viagem através de seu id.",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "id"
+          },
+          {
+            "in": "body",
+            "required": true,
+            "name": "dados da viagem a serem atualizados",
+            "schema": {
+              "$ref": "#/definitions/Travels"
+            }
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao do usuário manager",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Viagem atualizada com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/Travels"
+            }
+          },
+          "400": {
+            "description": "Id inválido."
+          },
+          "401": {
+            "description": "Token inválido. "
+          },
+          "404": {
+            "description": "Viagem não encontrada/Sem token."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/reservation/": {
+      "post": {
+        "tags": [
+          "Reservation"
+        ],
+        "summary": "Cria uma nova reserva no banco de dados",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "dados do usuário manager",
+            "required": true,
+            "schema": {
+              "properties": {
+                "travel": {
+                  "type": "string",
+                  "example": "64751bb2ea0a760fb84ee9b3"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Viagem cadastrada com sucesso."
+          },
+          "400": {
+            "description": "Requisicao de corpo invalida/Limite máximo de reservas atingido."
+          },
+          "401": {
+            "description": "Token inválido. "
+          },
+          "404": {
+            "description": "Sem token/Não há mais assentos disponíveis para essa viagem"
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Reservation"
+        ],
+        "summary": "Retorna uma lista com todas reservas cadastradas no Banco de dados.",
+        "parameters": [
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao do usuário manager",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista todos reservas do banco.",
+            "schema": {
+              "$ref": "#/definitions/Reservation"
+            }
+          },
+          "401": {
+            "description": "Token inválido. "
+          },
+          "404": {
+            "description": "Sem token. "
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/reservation/user": {
+      "get": {
+        "tags": [
+          "Reservation"
+        ],
+        "summary": "Retorna uma lista com todas as reservas cadastradas dado o id do usuário",
+        "parameters": [
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista todos as reservas do banco, dado o usuário.",
+            "schema": {
+              "$ref": "#/definitions/Reservation"
+            }
+          },
+          "401": {
+            "description": "Token inválido. "
+          },
+          "404": {
+            "description": "Sem token. "
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/reservation/{id}": {
+      "get": {
+        "tags": [
+          "Reservation"
+        ],
+        "summary": "Retorna as reservas para um determinado usuário e viagem.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna uma viagem com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/Reservation"
+            }
+          },
+          "400": {
+            "description": "Id inválido."
+          },
+          "401": {
+            "description": "Token inválido. "
+          },
+          "404": {
+            "description": "Sem token. "
+          },
+          "500": {
+            "description": "Erro interno no servidor."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Reservation"
+        ],
+        "summary": "Cancelamento de uma reserva através de seu ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao do usuário",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Reserva cancelada com sucesso."
+          },
+          "400": {
+            "description": "Id inválido."
+          },
+          "401": {
+            "description": "Token inválido. "
+          },
+          "404": {
+            "description": "Reserva não encontrada/Viagem não encontrada/Sem token."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Reservation"
+        ],
+        "summary": "Atualiza uma reserva através de seu id.",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "id"
+          },
+          {
+            "in": "body",
+            "required": true,
+            "name": "dados da viagem a serem atualizados",
+            "schema": {
+              "properties": {
+                "travel": {
+                  "type": "string",
+                  "example": "64751bb2ea0a760fb84ee9b3"
+                }
+              }
+            }
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao do usuário",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Troca de passagem efetuada com sucesso."
+          },
+          "400": {
+            "description": "Limite máximo de reservas atingido/Id inválido."
+          },
+          "401": {
+            "description": "Token inválido. "
+          },
+          "404": {
+            "description": "Reserva não encontrada/Viagem não encontrada/Não há mais assentos disponíveis para essa viagem/Sem token."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "required": [
+        "name",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Fulano da Silva"
+        },
+        "email": {
+          "type": "string",
+          "example": "fulano@gmail.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "010203"
+        },
+        "isManager": {
+          "type": "boolean",
+          "example": false
+        }
+      }
+    },
+    "Reservation": {
+      "type": "object",
+      "required": [
+        "user",
+        "travel"
+      ],
+      "properties": {
+        "user": {
+          "type": "string",
+          "example": "64751bb2ea0a760fb84ee9b3"
+        },
+        "travel": {
+          "type": "string",
+          "example": "64751bb2ea0a760fb84ee9b3"
+        }
+      }
+    },
+    "Travels": {
+      "type": "object",
+      "required": [
+        "destination",
+        "date",
+        "departureTime",
+        "arrivalTime",
+        "price",
+        "availableSeatsNumber",
+        "isAvailable"
+      ],
+      "properties": {
+        "destination": {
+          "type": "string",
+          "example": "Marte"
+        },
+        "date": {
+          "type": "string",
+          "example": "29/09/2023"
+        },
+        "departureTime": {
+          "type": "string",
+          "example": "19:30"
+        },
+        "arrivalTime": {
+          "type": "string",
+          "example": "19:30"
+        },
+        "price": {
+          "type": "number",
+          "example": 5000
+        },
+        "availableSeatsNumber": {
+          "type": "number",
+          "example": 10
+        },
+        "isAvailable": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    }
+  }
+}

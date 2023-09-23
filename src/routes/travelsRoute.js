@@ -20,14 +20,11 @@ router.post(
     TravelsController.create
 );
 
-router.get(
-    '/available',
-    ensureAuthenticate,
-    ensureManager,
-    TravelsController.getAllAvailable
-);
+router.get('/available', ensureAuthenticate, TravelsController.getAllAvailable);
 
 router.get('/', ensureAuthenticate, ensureManager, TravelsController.getAll);
+
+router.get('/:id', ensureAuthenticate, verifyId, TravelsController.getById);
 
 router.put(
     '/:id',

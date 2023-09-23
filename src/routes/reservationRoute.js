@@ -45,7 +45,16 @@ router.put(
     limitRequests.heavily,
     ensureAuthenticate,
     validate(reservationRules),
+    verifyId,
     ReservationController.update
+);
+
+router.delete(
+    '/:id',
+    limitRequests.heavily,
+    ensureAuthenticate,
+    verifyId,
+    ReservationController.remove
 );
 
 export default { router, name: '/reservation' };

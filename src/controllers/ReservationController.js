@@ -113,18 +113,18 @@ async function update(req, res) {
 
         const reservation = await Reservation.findById(id);
         if (!reservation) {
-            return res.status(404).json({ message: 'Reserva não encontrada' });
+            return res.status(404).json({ message: 'Reserva não encontrada.' });
         }
 
         const travel = await Travels.findById(req.body.travel);
         if (!travel) {
-            return res.status(404).json({ message: 'Viagem não encontrada' });
+            return res.status(404).json({ message: 'Viagem não encontrada.' });
         }
 
         if (travel.availableSeatsNumber === 0) {
-            return res
-                .status(404)
-                .json({ message: 'Não há mais assentos disponíveis para essa viagem' });
+            return res.status(404).json({
+                message: 'Não há mais assentos disponíveis para essa viagem.',
+            });
         }
 
         const reservations = await Reservation.find({
@@ -151,6 +151,37 @@ async function update(req, res) {
     }
 }
 
+async function remove(req, res) {
+    try {
+        const { id } = req.params;
+
+        const reservation = await Reservation.findById(id);
+        if (!reservation) {
+            return res.status(404).json({ message: 'Reserva não encontrada.' });
+        }
+
+        const travel = await Travels.findById(req.query.travel);
+        if (!travel) {
+            return res.status(404).json({ message: 'Viagem não encontrada.' });
+        }
+
+        await Reservation.remove({ _id: id });
+
+        await travel.updateOne({
+            availableSeatsNumber: travel.availableSeatsNumber + 1,
+        });
+
+        return res.status(204).json();
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 export default {
-    create, getAll, getAllByUser, getAllByUserAndTravel, update
+    create,
+    getAll,
+    getAllByUser,
+    getAllByUserAndTravel,
+    update,
+    remove,
 };
