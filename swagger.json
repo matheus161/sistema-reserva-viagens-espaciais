@@ -6,10 +6,7 @@
     "description": "Documentaçao refente ao desafio de Desenvolvimento Backend Node.js: Sistema de Reserva de Viagens Espaciais."
   },
   "host": "localhost:8080",
-  "schemes": [
-    "http",
-    "https"
-  ],
+  "schemes": ["http", "https"],
   "tags": [
     {
       "name": "Auth",
@@ -35,9 +32,7 @@
   "paths": {
     "/api/v1/auth": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "Autentica o usuário e retorna um token JWT.",
         "parameters": [
           {
@@ -81,9 +76,7 @@
     },
     "/api/v1/register": {
       "post": {
-        "tags": [
-          "Register"
-        ],
+        "tags": ["Register"],
         "summary": "Cria um novo usuário no banco de dados",
         "parameters": [
           {
@@ -116,9 +109,7 @@
     },
     "/api/v1/user/": {
       "get": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Retorna uma lista com todos os usuários cadastrados no Banco de dados.",
         "parameters": [
           {
@@ -150,9 +141,7 @@
     },
     "/api/v1/user/{id}": {
       "get": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Retorna um usuário utilizando o seu id.",
         "parameters": [
           {
@@ -181,9 +170,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Deleta um usuário do banco de dados utilizando o ID.",
         "parameters": [
           {
@@ -216,9 +203,7 @@
         }
       },
       "put": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Atualiza um usuário já cadastrado.",
         "parameters": [
           {
@@ -270,9 +255,7 @@
     },
     "/api/v1/travels/": {
       "post": {
-        "tags": [
-          "Travels"
-        ],
+        "tags": ["Travels"],
         "summary": "Cria uma nova viagem no banco de dados",
         "parameters": [
           {
@@ -303,9 +286,7 @@
         }
       },
       "get": {
-        "tags": [
-          "Travels"
-        ],
+        "tags": ["Travels"],
         "summary": "Retorna uma lista com todas as viagens cadastradas no Banco de dados.",
         "parameters": [
           {
@@ -314,13 +295,38 @@
             "description": "um token JWT de autenticacao do usuário manager",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "A página atual.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "Limite de itens por página.",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "Lista todos as viagens do banco.",
             "schema": {
-              "$ref": "#/definitions/Travels"
+              "type": "object",
+              "properties": {
+                "results": {
+                  "$ref": "#/definitions/Travels"
+                },
+                "totalItems": {
+                  "type": "number"
+                },
+                "totalPages": {
+                  "type": "number"
+                }
+              }
             }
           },
           "401": {
@@ -337,9 +343,7 @@
     },
     "/api/v1/travels/available": {
       "get": {
-        "tags": [
-          "Travels"
-        ],
+        "tags": ["Travels"],
         "summary": "Retorna uma lista com todas as viagens cadastradas e com a tag isAvailable = true no Banco de dados.",
         "parameters": [
           {
@@ -348,13 +352,38 @@
             "description": "um token JWT de autenticacao",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "A página atual.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "Limite de itens por página.",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "Lista todos as viagens do banco.",
             "schema": {
-              "$ref": "#/definitions/Travels"
+              "type": "object",
+              "properties": {
+                "results": {
+                  "$ref": "#/definitions/Travels"
+                },
+                "totalItems": {
+                  "type": "number"
+                },
+                "totalPages": {
+                  "type": "number"
+                }
+              }
             }
           },
           "401": {
@@ -371,9 +400,7 @@
     },
     "/api/v1/travels/{id}": {
       "get": {
-        "tags": [
-          "Travels"
-        ],
+        "tags": ["Travels"],
         "summary": "Retorna uma viagem através de um id válido.",
         "parameters": [
           {
@@ -405,9 +432,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Travels"
-        ],
+        "tags": ["Travels"],
         "summary": "Exclusão lógica de uma viagem através de seu ID.",
         "parameters": [
           {
@@ -443,9 +468,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Travels"
-        ],
+        "tags": ["Travels"],
         "summary": "Atualiza uma viagem através de seu id.",
         "parameters": [
           {
@@ -494,9 +517,7 @@
     },
     "/api/v1/reservation/": {
       "post": {
-        "tags": [
-          "Reservation"
-        ],
+        "tags": ["Reservation"],
         "summary": "Cria uma nova reserva no banco de dados",
         "parameters": [
           {
@@ -532,9 +553,7 @@
         }
       },
       "get": {
-        "tags": [
-          "Reservation"
-        ],
+        "tags": ["Reservation"],
         "summary": "Retorna uma lista com todas reservas cadastradas no Banco de dados.",
         "parameters": [
           {
@@ -543,13 +562,38 @@
             "description": "um token JWT de autenticacao do usuário manager",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "A página atual.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "Limite de itens por página.",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "Lista todos reservas do banco.",
+            "description": "Lista todas as reservas do banco.",
             "schema": {
-              "$ref": "#/definitions/Reservation"
+              "type": "object",
+              "properties": {
+                "results": {
+                  "$ref": "#/definitions/Reservation"
+                },
+                "totalItems": {
+                  "type": "number"
+                },
+                "totalPages": {
+                  "type": "number"
+                }
+              }
             }
           },
           "401": {
@@ -566,9 +610,7 @@
     },
     "/api/v1/reservation/user": {
       "get": {
-        "tags": [
-          "Reservation"
-        ],
+        "tags": ["Reservation"],
         "summary": "Retorna uma lista com todas as reservas cadastradas dado o id do usuário",
         "parameters": [
           {
@@ -577,13 +619,38 @@
             "description": "um token JWT de autenticacao",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "A página atual.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "Limite de itens por página.",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "Lista todos as reservas do banco, dado o usuário.",
             "schema": {
-              "$ref": "#/definitions/Reservation"
+              "type": "object",
+              "properties": {
+                "results": {
+                  "$ref": "#/definitions/Reservation"
+                },
+                "totalItems": {
+                  "type": "number"
+                },
+                "totalPages": {
+                  "type": "number"
+                }
+              }
             }
           },
           "401": {
@@ -600,9 +667,7 @@
     },
     "/api/v1/reservation/{id}": {
       "get": {
-        "tags": [
-          "Reservation"
-        ],
+        "tags": ["Reservation"],
         "summary": "Retorna as reservas para um determinado usuário e viagem.",
         "parameters": [
           {
@@ -634,9 +699,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Reservation"
-        ],
+        "tags": ["Reservation"],
         "summary": "Cancelamento de uma reserva através de seu ID.",
         "parameters": [
           {
@@ -672,9 +735,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Reservation"
-        ],
+        "tags": ["Reservation"],
         "summary": "Atualiza uma reserva através de seu id.",
         "parameters": [
           {
@@ -727,11 +788,7 @@
   "definitions": {
     "User": {
       "type": "object",
-      "required": [
-        "name",
-        "email",
-        "password"
-      ],
+      "required": ["name", "email", "password"],
       "properties": {
         "name": {
           "type": "string",
@@ -753,10 +810,7 @@
     },
     "Reservation": {
       "type": "object",
-      "required": [
-        "user",
-        "travel"
-      ],
+      "required": ["user", "travel"],
       "properties": {
         "user": {
           "type": "string",
